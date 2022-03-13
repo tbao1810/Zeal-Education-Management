@@ -1,0 +1,110 @@
+﻿@model ProjectSemester3.Areas.Admin.ViewModel.FeedbackFacultyViewModel
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Web.Common;
+@using X.PagedList.Mvc.Bootstrap4.Core;
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@Html.Raw(TempData["msg"])
+@{var index = 1;}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @{
+                                var success = "";
+                                if (TempData["success"] != null)
+                                {
+                                    success = TempData["success"].ToString();
+                                }
+                            }
+                            @if (success.Equals("success"))
+                            {
+                                <span class="au-alert-success" id="notification">Successfully!</span>
+                            }
+                            <!-- DATA TABLE -->
+                            <h1 class="m-b-35">FeedBack Faculty</h1>
+                            <div class="table-data__tool">
+                                <div class="table-data__tool-left padding_search_bar">
+                                    <form class="form-header" asp-action="index" method="get">
+                                        <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+                                        <div class="rs-select2--light">
+                                            @* Start Search autocomplete*@
+                                            <input class="searchPadding" type="text" name="searchFeedbackFaculty" id="searchFeedbackFaculty" placeholder="Search..." value="@ViewBag.searchFeedbackFaculty" />
+                                            @* End Search autocomplete*@
+                                        </div>
+                                        <div class="rs-select2--light">
+                                            <button class="au-btn au-btn-load au-btn--large" type="submit">
+                                                Search
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="table-data__tool-right">
+                                    @*<button class="au-btn au-btn-icon au-btn--blue au-btn--small" data-toggle="modal" data-target="#ModalCreate">
+                                        <i class="zmdi zmdi-plus"></i>add item
+                                    </button>*@
+                                </div>
+                            </div>
+                            <!-- END DATA TABLE -->
+                        </div>
+                    </div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Serial</th>
+                                <th>Feedback</th>
+                                <th>Faculty</th>
+
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var feedbackfaculty in ViewBag.feedbackFacultys.PagedList)
+                            {
+                                <tr >
+                                    <td>@index</td>
+                                    <td>@feedbackfaculty.FeedbackId</td>
+                                    <td>@feedbackfaculty.Faculty.Fullname</td>
+
+                                    <td>
+
+                                        @*<a type="button" class="btn btn-success" asp-action="edit" asp-route-feedbackid="@feedbackfaculty.FeedbackId" asp-route-facultyid="@feedbackfaculty.FacultyId"><i class="fas fa-edit"></i></a>*@
+                                        <a type="button" class="btn btn-danger" asp-action="delete" asp-route-feedbackid="@feedbackfaculty.FeedbackId" asp-route-facultyid="@feedbackfaculty.FacultyId" onclick="return confirm('Are you sure?')"><i class="far fa-trash-alt"></i></a>
+
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                    @*Start pagination*@
+                    <div class="paging_bar">
+                        @using (Html.BeginForm("index", "feedbackfaculties", FormMethod.Get, new { id = "form1" }))
+                        {
+                            <input type="hidden" name="searchFeedbackFaculty" value="@ViewBag.searchFeedbackFaculty" />
+                            <div class="page-count">
+                                Page &nbsp;@(ViewBag.feedbackFacultys.PagedList.PageCount < ViewBag.feedbackFacultys.PagedList.PageNumber ? 0 : ViewBag.feedbackFacultys.PagedList.PageNumber) &nbsp;of @ViewBag.feedbackFacultys.PagedList.PageCount
+                            </div>
+                            <div class="pagination">
+                                @Html.PagedListPager((IPagedList)ViewBag.feedbackFacultys.PagedList, page => Url.Action("index", "feedbackfaculties", new { searchFeedbackFaculty = ViewBag.searchFeedbackFaculty, page, pageSize = ViewBag.psize }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
+                                &nbsp;&nbsp;  @Html.DropDownList("pageSize")
+                            </div>
+                        }
+                    </div>
+                    @*End pagination*@
+                </div>
+                @*//////////*@
+            </div>
+        </div>
+    </div>
+</div>
+

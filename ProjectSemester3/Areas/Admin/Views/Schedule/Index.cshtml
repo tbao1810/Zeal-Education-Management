@@ -1,0 +1,89 @@
+﻿@model ProjectSemester3.Areas.Admin.ViewModel.ScheduleViewModel
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Web.Common;
+@using X.PagedList.Mvc.Bootstrap4.Core;
+
+@{
+    ViewData["Title"] = "Schedule";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@{var index = 1;}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h1>Schedule of classes</h1>
+                    <br /><br />
+                    <div class="table-data__tool">
+                        <div class="table-data__tool-left padding_search_bar">
+                            <form class="form-header" asp-action="index" method="get">
+
+                                <input type="hidden" name="pageSize" value="@ViewBag.psize" />
+
+
+                                <div class="rs-select2--light">
+                                    @* Start Search autocomplete*@
+                                    <input class="searchPadding" type="text" name="searchClassSchedule" id="searchClassSchedule" placeholder="Search..." value="@ViewBag.searchClassSchedule" />
+
+                                    @* End Search autocomplete*@
+
+                                </div>
+                                <div class="rs-select2--light">
+                                    <button class="au-btn au-btn-load au-btn--large" type="submit">
+                                        Search
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="table-data__tool-right">
+
+                        </div>
+                    </div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Serial</th>
+                                <th>Class</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var c in ViewBag.listClass.PagedList)
+                            {
+                                <tr onclick="location.href = '@Url.Action("details", "schedule", new { classid=c.ClassId })'">
+                                    <td>@index</td>
+                                    <td>@c.ClassName</td>
+                                    <td>
+                                        <a asp-controller="schedule" asp-action="details" asp-route-classid="@c.ClassId">View</a>
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                    @*Start pagination*@
+                    <div class="paging_bar">
+                        @using (Html.BeginForm("index", "schedule", FormMethod.Get, new { id = "form1" }))
+                        {
+                            <input type="hidden" name="searchClassSchedule" value="@ViewBag.searchClassSchedule" />
+                            <div class="page-count">
+                                Page &nbsp;@(ViewBag.listClass.PagedList.PageCount < ViewBag.listClass.PagedList.PageNumber ? 0 : ViewBag.listClass.PagedList.PageNumber) &nbsp;of @ViewBag.listClass.PagedList.PageCount
+                            </div>
+
+                            <div class="pagination">
+                                @Html.PagedListPager((IPagedList)ViewBag.listClass.PagedList, page => Url.Action("index", "schedule", new { searchClassSchedule = ViewBag.searchClassSchedule, page, pageSize = ViewBag.psize }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)
+                                &nbsp;&nbsp;  @Html.DropDownList("pageSize")
+                            </div>
+                        }
+                    </div>
+                    @*End pagination*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
